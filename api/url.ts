@@ -11,7 +11,7 @@ export default async function handler(req: Request) {
     }
     if (req.method === "POST") {
         const { url } = await req.json();
-        console.log(url);
+        new UrlModel(url);
         return new Response("URL added", {
             headers: {
                 "Content-Type": "text/plain",
@@ -21,7 +21,7 @@ export default async function handler(req: Request) {
     throw new Error("Method not allowed");
 }
 
-function redirectToNormalUrl(shortUrl: URL) {
+function redirectToNormalUrl(shortUrl: string) {
     const url = UrlModel.getNormalUrl(shortUrl);
     if (url) {
         return Response.redirect(url, 301);

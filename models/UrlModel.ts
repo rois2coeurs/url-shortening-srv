@@ -41,9 +41,8 @@ export class UrlModel {
         });
     }
 
-    public static getNormalUrl(shortUrl: URL) {
-        console.log(shortUrl.pathname);
-        const url = UrlModel.Urls.find((url) => url.shortUrl === shortUrl.pathname);
+    public static getNormalUrl(shortUrl: string) {
+        const url = UrlModel.Urls.find((url) => url.shortUrl === shortUrl);
         if (url) {
             url._number_of_visits++;
             return url.url;

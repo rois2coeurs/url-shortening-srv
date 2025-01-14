@@ -20,7 +20,7 @@ export class Router {
         if (handler) {
             return await handler(req);
         } else {
-            return redirectToNormalUrl(url);
+            return redirectToNormalUrl(route);
         }
     }
 }
