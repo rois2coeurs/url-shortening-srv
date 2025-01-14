@@ -36,7 +36,8 @@ export class UrlModel {
                 id: url.id,
                 url: url.url,
                 shortUrl: url.shortUrl,
-                created_at: url.created_at
+                created_at: url.created_at,
+                number_of_visits: url.number_of_visits,
             };
         });
     }
