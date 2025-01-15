@@ -1,5 +1,4 @@
 import {redirectToNormalUrl, shortenDelete, shortenGet, shortenGetStats, shortenPost, shortenPut} from "./api/url.ts";
-import type {Server} from "bun";
 
 enum Method {
     GET = "GET",
@@ -44,12 +43,12 @@ export class Router {
 
     }
 
-    async navigate(req: Request, server: Server) {
+    async navigate(req: Request) {
         const url = new URL(req.url);
-        const path = url.pathname;
+        const path = url.pathname;//
         const method = req.method as Method;
-        const ip = server.requestIP(req);
-        console.log(`${ip?.address} : [${method}] -> ${path}`);
+        const ip = req.headers.get("x-forwarded-for");
+        console.log(`${ip} : [${method}] -> ${req.url}`);
         if (path === "/") {
             return new Response(await Bun.file("./front/index.html").bytes(), {
                 headers: {
