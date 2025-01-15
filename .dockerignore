@@ -130,3 +130,6 @@ data/
 
 Dockerfile
 docker-compose.yml
+.dockerignore
+
+.idea/
