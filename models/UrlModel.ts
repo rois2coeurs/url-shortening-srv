@@ -1,4 +1,5 @@
 import {db} from "../db-context.ts";
+import {randomBytes} from "node:crypto";
 
 export class UrlModel {
     readonly id: number;
@@ -18,8 +19,19 @@ export class UrlModel {
         this.accessCount = accessCount;
     }
 
-    private static generateShortUrl() {
-        return Math.random().toString(36).substring(2, 8);
+    private static generateShortCode() {
+        const existingShortCodes = new Set<string>();
+        const query = db.prepare(`SELECT shortCode
+                                  FROM URL`);
+        const rows = query.all() as { shortCode: string }[];
+        for (const row of rows) {
+            existingShortCodes.add(row.shortCode);
+        }
+        let shortCode: string;
+        do {
+            shortCode = randomBytes(6).toString('base64url').substring(2, 8);
+        } while (existingShortCodes.has(shortCode));
+        return shortCode;
     }
 
     static delete(urlObj: UrlModel) {
@@ -61,7 +73,7 @@ export class UrlModel {
     }
 
     static create(url: string): UrlModel | null {
-        const shortCode = UrlModel.generateShortUrl();
+        const shortCode = UrlModel.generateShortCode();
         const query = db.prepare(`INSERT INTO URL (url, shortCode)
                                   VALUES (?, ?);`);
         const res = query.run(url, shortCode);

@@ -23,6 +23,9 @@ export class Router {
     routes: Route[] = [];
 
     async populateHandlers() {
+        // GET /{shortCode}
+        this.routes.push(new Route(/^\/([a-zA-Z0-9]+)$/, Method.GET, redirectToNormalUrl));
+
         // POST /shorten
         this.routes.push(new Route(/^\/shorten$/, Method.POST, shortenPost));
 
@@ -38,8 +41,6 @@ export class Router {
         // GET /shorten/{shortCode}/stats
         this.routes.push(new Route(/^\/shorten\/([a-zA-Z0-9]+)\/stats$/, Method.GET, shortenGetStats));
 
-        // GET /{shortCode}
-        this.routes.push(new Route(/^\/([a-zA-Z0-9]+)$/, Method.GET, redirectToNormalUrl));
     }
 
     async navigate(req: Request) {
@@ -47,16 +48,20 @@ export class Router {
         const path = url.pathname;
         const method = req.method as Method;
         console.log(`${method} -> '${url}'`);
+        if (path === "/") {
+            return new Response(await Bun.file("./front/index.html").bytes(), {
+                headers: {
+                    "Content-Type": "text/html",
+                },
+            });
+        }
         for (const route of this.routes) {
+            console.log(`Checking ${route.method} -> '${route.regularExpression}'`);
             const match = path.match(route.regularExpression);
             if (match && method === route.method) {
                 return route.handler(req);
             }
         }
-        return new Response(await Bun.file("./front/index.html").bytes(), {
-            headers: {
-                "Content-Type": "text/html",
-            },
-        })
+        return new Response("Not found", {status: 404});
     }
 }
