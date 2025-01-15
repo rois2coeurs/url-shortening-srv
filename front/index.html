@@ -35,8 +35,8 @@
                 return response.json();
             })
             .then(function (data) {
-                document.querySelector('#response').innerHTML = `http://localhost:3000/${data.shortCode}`;
-                document.querySelector('#response').href = `http://localhost:3000/${data.shortCode}`;
+                document.querySelector('#response').innerHTML = `${window.location.origin}/${data.shortCode}`;
+                document.querySelector('#response').href = `${window.location.origin}/${data.shortCode}`;
             });
     });
 </script>
