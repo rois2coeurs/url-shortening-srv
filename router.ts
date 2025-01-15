@@ -1,4 +1,5 @@
 import {redirectToNormalUrl, shortenDelete, shortenGet, shortenGetStats, shortenPost, shortenPut} from "./api/url.ts";
+import type {Server} from "bun";
 
 enum Method {
     GET = "GET",
@@ -43,11 +44,12 @@ export class Router {
 
     }
 
-    async navigate(req: Request) {
+    async navigate(req: Request, server: Server) {
         const url = new URL(req.url);
         const path = url.pathname;
         const method = req.method as Method;
-        console.log(`${method} -> '${url}'`);
+        const ip = server.requestIP(req);
+        console.log(`${ip?.address} : [${method}] -> ${path}`);
         if (path === "/") {
             return new Response(await Bun.file("./front/index.html").bytes(), {
                 headers: {
@@ -56,7 +58,6 @@ export class Router {
             });
         }
         for (const route of this.routes) {
-            console.log(`Checking ${route.method} -> '${route.regularExpression}'`);
             const match = path.match(route.regularExpression);
             if (match && method === route.method) {
                 return route.handler(req);
