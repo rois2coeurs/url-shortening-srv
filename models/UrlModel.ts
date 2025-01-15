@@ -1,53 +1,79 @@
+import {db} from "../db-context.ts";
+
 export class UrlModel {
-    private static Urls: UrlModel[] = [];
+    readonly id: number;
+    url: string;
+    readonly shortCode: string;
+    readonly createdAt: Date;
+    readonly updatedAt: Date;
+    accessCount: number;
+    private isValid: boolean = true;
 
-    public readonly id: number;
-    public readonly url: string;
-    public readonly shortUrl: string;
-    public readonly created_at: Date;
-
-    public _number_of_visits: number;
-
-    public get number_of_visits() {
-        return this._number_of_visits;
-    }
-
-    constructor(url: string) {
-        this.id = UrlModel.Urls.length + 1;
+    private constructor(id: number, url: string, shortCode: string, createdAt: Date, updatedAt: Date, accessCount: number) {
+        this.id = id;
         this.url = url;
-        this.shortUrl = UrlModel.generateShortUrl();
-        this.created_at = new Date();
-        this._number_of_visits = 0;
-        UrlModel.Urls.push(this);
+        this.shortCode = shortCode;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.accessCount = accessCount;
     }
 
     private static generateShortUrl() {
-        return `/${Math.random().toString(36).substring(2, 8)}`;
+        return Math.random().toString(36).substring(2, 8);
     }
 
-    public async delete() {
-        // Delete the URL from the database
+    static delete(urlObj: UrlModel) {
+        if (!urlObj.isValid) throw new Error("UrlModel is not valid");
+        const query = db.prepare(`DELETE
+                                  FROM URL
+                                  WHERE id = ?;`);
+        query.run(urlObj.id);
+        urlObj.isValid = false;
     }
 
-    public static getAll() {
-        // Get all the URLs from the database
-        return UrlModel.Urls.map((url) => {
-            return {
-                id: url.id,
-                url: url.url,
-                shortUrl: url.shortUrl,
-                created_at: url.created_at,
-                number_of_visits: url.number_of_visits,
-            };
-        });
-    }
-
-    public static getNormalUrl(shortUrl: string) {
-        const url = UrlModel.Urls.find((url) => url.shortUrl === shortUrl);
-        if (url) {
-            url._number_of_visits++;
-            return url.url;
+    toJson() {
+        return {
+            id: this.id,
+            url: this.url,
+            shortCode: this.shortCode,
+            createdAt: this.createdAt,
+            updatedAt: this.updatedAt,
+            accessCount: this.accessCount
         }
-        return null;
+    }
+
+    static getFromId(id: number): UrlModel | null {
+        const query = db.prepare(`SELECT *
+                                  FROM URL
+                                  WHERE id = ?;`);
+        const url = query.get(id) as UrlModel;
+        if (!url) return null;
+        return new UrlModel(url.id, url.url, url.shortCode, url.createdAt, url.updatedAt, url.accessCount);
+    }
+
+    static getFromShortCode(shortCode: string): UrlModel | null {
+        const query = db.prepare(`SELECT *
+                                  FROM URL
+                                  WHERE shortCode = ?;`);
+        const url = query.get(shortCode) as UrlModel;
+        if (!url) return null;
+        return new UrlModel(url.id, url.url, url.shortCode, url.createdAt, url.updatedAt, url.accessCount);
+    }
+
+    static create(url: string): UrlModel | null {
+        const shortCode = UrlModel.generateShortUrl();
+        const query = db.prepare(`INSERT INTO URL (url, shortCode)
+                                  VALUES (?, ?);`);
+        const res = query.run(url, shortCode);
+        return UrlModel.getFromId(res.lastInsertRowid as number);
+    }
+
+    save() {
+        if (!this.isValid) throw new Error("UrlModel is not valid");
+        const query = db.prepare(`UPDATE URL
+                                  SET url         = ?,
+                                      accessCount = ?
+                                  WHERE id = ?;`);
+        query.get(this.url, this.accessCount, this.id);
     }
 }
