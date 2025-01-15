@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>URL Shortener</title>
+</head>
+<body>
+
+<form action="/shorten" method="post">
+    <label>
+        <input type="text" name="url" placeholder="Enter URL">
+    </label>
+    <input type="submit" value="Shorten">
+</form>
+
+<a id="response" href="">
+
+</a>
+</body>
+</html>
+
+<script>
+    document.querySelector('form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const url = document.querySelector('input[name="url"]').value;
+        fetch('/shorten', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({url: url})
+        })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                document.querySelector('#response').innerHTML = `http://localhost:3000/${data.shortCode}`;
+                document.querySelector('#response').href = `http://localhost:3000/${data.shortCode}`;
+            });
+    });
+</script>

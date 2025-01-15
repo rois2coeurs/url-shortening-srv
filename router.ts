@@ -53,6 +53,10 @@ export class Router {
                 return route.handler(req);
             }
         }
-        return new Response("Not found", {status: 404});
+        return new Response(await Bun.file("./front/index.html").bytes(), {
+            headers: {
+                "Content-Type": "text/html",
+            },
+        })
     }
 }

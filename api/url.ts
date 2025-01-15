@@ -13,6 +13,7 @@ async function shortenPut(req: Request) {
 
     const {url} = await req.json();
     urlObj.url = url;
+    urlObj.save();
     return ResponseUrlObjJson(urlObj);
 }
 
