@@ -24,22 +24,22 @@ export class Router {
 
     async populateHandlers() {
         // GET /{shortCode}
-        this.routes.push(new Route(/^\/([a-zA-Z0-9]+)$/, Method.GET, redirectToNormalUrl));
+        this.routes.push(new Route(/^\/([a-zA-Z0-9-_]{6})$/, Method.GET, redirectToNormalUrl));
 
         // POST /shorten
         this.routes.push(new Route(/^\/shorten$/, Method.POST, shortenPost));
 
         // GET /shorten/{shortCode}
-        this.routes.push(new Route(/^\/shorten\/([a-zA-Z0-9]+)$/, Method.GET, shortenGet));
+        this.routes.push(new Route(/^\/shorten\/([a-zA-Z0-9-_]{6})$/, Method.GET, shortenGet));
 
         // PUT /shorten/{shortCode}
-        this.routes.push(new Route(/^\/shorten\/([a-zA-Z0-9]+)$/, Method.PUT, shortenPut));
+        this.routes.push(new Route(/^\/shorten\/([a-zA-Z0-9-_]{6})$/, Method.PUT, shortenPut));
 
         // DELETE /shorten/{shortCode}
-        this.routes.push(new Route(/^\/shorten\/([a-zA-Z0-9]+)$/, Method.DELETE, shortenDelete));
+        this.routes.push(new Route(/^\/shorten\/([a-zA-Z0-9-_]{6})$/, Method.DELETE, shortenDelete));
 
         // GET /shorten/{shortCode}/stats
-        this.routes.push(new Route(/^\/shorten\/([a-zA-Z0-9]+)\/stats$/, Method.GET, shortenGetStats));
+        this.routes.push(new Route(/^\/shorten\/([a-zA-Z0-9-_]{6})\/stats$/, Method.GET, shortenGetStats));
 
     }
 
