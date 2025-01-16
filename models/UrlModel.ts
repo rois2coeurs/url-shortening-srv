@@ -19,7 +19,7 @@ export class UrlModel {
         this.accessCount = accessCount;
     }
 
-    private static generateShortCode() {
+    static generateShortCode() {
         const existingShortCodes = new Set<string>();
         const query = db.prepare(`SELECT shortCode
                                   FROM URL`);

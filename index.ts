@@ -43,3 +43,9 @@ const server = Bun.serve({
 });
 
 console.log(`Server running at ${server.url} !`);
+
+const args = Bun.argv;
+if (args.includes("--test")) {
+    console.log("Test mode detected. Exiting...");
+    await server.stop();
+}
