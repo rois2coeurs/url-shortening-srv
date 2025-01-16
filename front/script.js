@@ -24,5 +24,4 @@ function addUrlToDiv(url) {
     a.textContent = url.url;
     a.classList.add('url');
     urlsDiv.appendChild(a);
-    urlsDiv.appendChild(document.createElement('br'));
 }
