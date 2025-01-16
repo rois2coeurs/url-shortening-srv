@@ -2,6 +2,7 @@ import {UrlModel} from "../models/UrlModel.ts";
 
 async function shortenPost(req: Request) {
     const {url} = await req.json();
+    if (!URL.canParse(url)) return new Response("Invalid URL", {status: 400});
     const urlObj = UrlModel.create(url);
     if (!urlObj) return new Response("URL not created", {status: 500});
     return ResponseUrlObjJson(urlObj);
@@ -12,6 +13,7 @@ async function shortenPut(req: Request) {
     if (!urlObj) return Response404();
 
     const {url} = await req.json();
+    if (!URL.canParse(url)) return new Response("Invalid URL", {status: 400});
     urlObj.url = url;
     urlObj.save();
     return ResponseUrlObjJson(urlObj);
