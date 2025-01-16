@@ -1,5 +1,5 @@
 FROM ubuntu:latest
-LABEL authors="rois2"
+LABEL authors="rois2coeurs"
 
 FROM oven/bun:1 AS base
 WORKDIR /usr/src/app
