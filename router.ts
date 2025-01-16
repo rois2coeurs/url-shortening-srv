@@ -45,17 +45,10 @@ export class Router {
 
     async navigate(req: Request) {
         const url = new URL(req.url);
-        const path = url.pathname;//
+        const path = url.pathname;
         const method = req.method as Method;
         const ip = req.headers.get("x-forwarded-for");
         console.log(`${ip} : [${method}] -> ${req.url}`);
-        if (path === "/") {
-            return new Response(await Bun.file("./front/index.html").bytes(), {
-                headers: {
-                    "Content-Type": "text/html",
-                },
-            });
-        }
         for (const route of this.routes) {
             const match = path.match(route.regularExpression);
             if (match && method === route.method) {

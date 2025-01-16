@@ -1,0 +1,44 @@
+body {
+    background-color: #313131;
+}
+
+.main-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 6.25rem;
+    height: 3.125rem;
+}
+
+.main-bar-input {
+    height: 100%;
+    width: 40%;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+    border: none;
+    padding: 0 2px;
+}
+
+.main-bar-button {
+    height: 100%;
+    width: 10%;
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+    border: none;
+    color: whitesmoke;
+    background-color: green;
+}
+
+.responses {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.url {
+    width: 40%;
+    background-color: rgba(245, 245, 245, 0.6);
+    padding: 1rem;
+    margin-top: 0.5rem;
+    border-radius: 5px;
+}
