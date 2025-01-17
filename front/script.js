@@ -2,7 +2,7 @@ document.getElementById('submit').addEventListener('click', async function (e) {
     e.preventDefault();
     const url = document.getElementById('url').value;
     const shortCode = await postUrl(url)
-    addUrlToDiv({url: `${window.location.origin}/${shortCode}`});
+    addUrlToDiv(`${window.location.origin}/${shortCode}`);
 });
 
 async function postUrl(url) {
@@ -20,8 +20,8 @@ async function postUrl(url) {
 function addUrlToDiv(url) {
     const urlsDiv = document.getElementById("responses");
     const a = document.createElement('a');
-    a.href = url.url;
-    a.textContent = url.url;
+    a.href = url;
+    a.textContent = url;
     a.classList.add('url');
     urlsDiv.appendChild(a);
 }
