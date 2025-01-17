@@ -23,5 +23,3 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/url-shortening-srv:latest
           platforms: linux/amd64,linux/arm64
-      - name: Deploy with Docker Compose
-        run: docker-compose up -d
