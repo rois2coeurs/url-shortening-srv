@@ -3,7 +3,7 @@
 
 name: Bun.sh
 
-on: [push]
+on: [ push ]
 
 jobs:
   test:
